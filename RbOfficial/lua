@@ -1,0 +1,235 @@
+--// Instant Steal UI
+--// Put this LocalScript in StarterPlayer > StarterPlayerScripts
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+
+local player = Players.LocalPlayer
+
+--------------------------------------------------
+-- MUSIC
+--------------------------------------------------
+
+local music = Instance.new("Sound")
+music.Name = "InstantStealMusic"
+music.SoundId = "rbxassetid://72263056906289"
+music.Volume = 0.5
+music.Looped = true
+music.Parent = player:WaitForChild("PlayerGui")
+
+music:Play()
+
+--------------------------------------------------
+-- CREATE GUI
+--------------------------------------------------
+
+local gui = Instance.new("ScreenGui")
+gui.Name = "InstantStealUI"
+gui.ResetOnSpawn = false
+gui.Parent = player:WaitForChild("PlayerGui")
+
+--------------------------------------------------
+-- LOADING SCREEN
+--------------------------------------------------
+
+local loadingFrame = Instance.new("Frame")
+loadingFrame.Size = UDim2.new(0, 260, 0, 110)
+loadingFrame.Position = UDim2.new(0.5, -130, 0.5, -55)
+loadingFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+loadingFrame.BorderSizePixel = 0
+loadingFrame.Parent = gui
+
+local loadingCorner = Instance.new("UICorner")
+loadingCorner.CornerRadius = UDim.new(0, 8)
+loadingCorner.Parent = loadingFrame
+
+local loadingText = Instance.new("TextLabel")
+loadingText.Size = UDim2.new(1, 0, 0, 35)
+loadingText.Position = UDim2.new(0, 0, 0, 15)
+loadingText.BackgroundTransparency = 1
+loadingText.Text = "Loading..."
+loadingText.TextColor3 = Color3.fromRGB(255, 255, 255)
+loadingText.TextSize = 20
+loadingText.Font = Enum.Font.GothamBold
+loadingText.Parent = loadingFrame
+
+local statusText = Instance.new("TextLabel")
+statusText.Size = UDim2.new(1, 0, 0, 25)
+statusText.Position = UDim2.new(0, 0, 0, 52)
+statusText.BackgroundTransparency = 1
+statusText.Text = "Please wait..."
+statusText.TextColor3 = Color3.fromRGB(170, 170, 170)
+statusText.TextSize = 14
+statusText.Font = Enum.Font.Gotham
+statusText.Parent = loadingFrame
+
+--------------------------------------------------
+-- 20 SECOND LOADING
+--------------------------------------------------
+
+for i = 20, 1, -1 do
+	statusText.Text = "Please wait... " .. i .. "s"
+	task.wait(1)
+end
+
+--------------------------------------------------
+-- FADE OUT
+--------------------------------------------------
+
+local fade = TweenService:Create(
+	loadingFrame,
+	TweenInfo.new(0.4),
+	{
+		BackgroundTransparency = 1
+	}
+)
+
+fade:Play()
+task.wait(0.4)
+loadingFrame:Destroy()
+
+--------------------------------------------------
+-- MAIN UI
+--------------------------------------------------
+
+local main = Instance.new("Frame")
+main.Size = UDim2.new(0, 260, 0, 125)
+main.Position = UDim2.new(0.5, -130, 0.5, -62)
+main.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
+main.BorderSizePixel = 0
+main.Active = true
+main.Draggable = true
+main.Parent = gui
+
+local mainCorner = Instance.new("UICorner")
+mainCorner.CornerRadius = UDim.new(0, 7)
+mainCorner.Parent = main
+
+--------------------------------------------------
+-- TITLE
+--------------------------------------------------
+
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, 0, 0, 27)
+title.Position = UDim2.new(0, 0, 0, 0)
+title.BackgroundTransparency = 1
+title.Text = "Instant Steal"
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.TextSize = 18
+title.Font = Enum.Font.GothamBold
+title.Parent = main
+
+--------------------------------------------------
+-- CREATOR
+--------------------------------------------------
+
+local creator = Instance.new("TextLabel")
+creator.Size = UDim2.new(1, 0, 0, 18)
+creator.Position = UDim2.new(0, 0, 0, 25)
+creator.BackgroundTransparency = 1
+creator.Text = "@cattoscripts"
+creator.TextColor3 = Color3.fromRGB(150, 150, 150)
+creator.TextSize = 11
+creator.Font = Enum.Font.Gotham
+creator.Parent = main
+
+--------------------------------------------------
+-- BUTTON CREATOR
+--------------------------------------------------
+
+local function createButton(text, color, y)
+
+	local button = Instance.new("TextButton")
+
+	button.Size = UDim2.new(1, -12, 0, 38)
+	button.Position = UDim2.new(0, 6, 0, y)
+	button.BackgroundColor3 = color
+	button.BorderSizePixel = 0
+
+	button.Text = text
+	button.TextColor3 = Color3.fromRGB(255, 255, 255)
+	button.TextSize = 14
+	button.Font = Enum.Font.GothamBold
+
+	button.AutoButtonColor = false
+	button.Parent = main
+
+	local corner = Instance.new("UICorner")
+	corner.CornerRadius = UDim.new(0, 7)
+	corner.Parent = button
+
+	--------------------------------------------------
+	-- HOVER EFFECT
+	--------------------------------------------------
+
+	button.MouseEnter:Connect(function()
+
+		TweenService:Create(
+			button,
+			TweenInfo.new(0.15),
+			{
+				BackgroundColor3 =
+					color:Lerp(Color3.new(1, 1, 1), 0.12)
+			}
+		):Play()
+
+	end)
+
+	button.MouseLeave:Connect(function()
+
+		TweenService:Create(
+			button,
+			TweenInfo.new(0.15),
+			{
+				BackgroundColor3 = color
+			}
+		):Play()
+
+	end)
+
+	return button
+end
+
+--------------------------------------------------
+-- BUTTONS
+--------------------------------------------------
+
+local stealButton = createButton(
+	"Steal Brainrot",
+	Color3.fromRGB(0, 174, 239),
+	35
+)
+
+local tpButton = createButton(
+	"TP Forward",
+	Color3.fromRGB(242, 83, 30),
+	80
+)
+
+--------------------------------------------------
+-- STEAL BRAINROT
+--------------------------------------------------
+
+stealButton.Activated:Connect(function()
+
+	stealButton.Text = "Stealing"
+
+	task.wait(3)
+
+	stealButton.Text = "Steal Brainrot"
+
+end)
+
+--------------------------------------------------
+-- TP FORWARD
+--------------------------------------------------
+
+tpButton.Activated:Connect(function()
+
+	tpButton.Text = "Brainrot Not Found"
+
+	task.wait(3)
+
+	tpButton.Text = "TP Forward"
+
+end)
